@@ -1,9 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 
-import '../global/global_const.dart';
+
+
+
+
+
+
+
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -12,38 +19,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
-  GoogleMapController? controllerGoogleMap;
+  late MapboxMapController _controller;
 
-  void _onMapCreated(GoogleMapController controller) {
-
-    controllerGoogleMap = controller;
-
-
-    googleMapCompleterController.complete(controllerGoogleMap);
-
+  @override
+  void initState() {
+    super.initState();
+    // Set Mapbox access token at runtime
 
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Stack(
         children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            initialCameraPosition: googlePlexInitialPosition,
-            onMapCreated: _onMapCreated,
+          MapboxMap(
+            accessToken: 'pk.eyJ1IjoiaHV5azIxIiwiYSI6ImNsbnpzcWhycTEwbnYybWxsOTAydnc2YmYifQ.55__cADsvmLEm7G1pib5nA', // Use the access token
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(37.42796133580664, -122.085749655962),
+              zoom: 14.4746,
+            ),
+            onMapCreated: (controller) {
+              setState(() {
+                _controller = controller;
+              });
+            },
           ),
-
         ],
-    ),
+      ),
     );
   }
 }

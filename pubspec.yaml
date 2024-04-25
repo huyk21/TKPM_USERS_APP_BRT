@@ -41,7 +41,7 @@ dependencies:
   firebase_database:
   firebase_storage:
   google_maps_flutter:
-
+  mapbox_gl:
 dev_dependencies:
   flutter_test:
     sdk: flutter
