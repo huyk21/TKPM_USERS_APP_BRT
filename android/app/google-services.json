@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "832713560007",
+    "firebase_url": "https://be-right-there-f7e78-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "be-right-there-f7e78",
+    "storage_bucket": "be-right-there-f7e78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832713560007:android:8cd12b1b74fba1478953e2",
+        "android_client_info": {
+          "package_name": "com.tkpm.users_app_uber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ2XV4A8wn-qTTOGQLnPu5cAuXdIXiHeQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
