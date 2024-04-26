@@ -4,14 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-
-
-
-
-
-
-
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -41,7 +33,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               target: LatLng(37.42796133580664, -122.085749655962),
               zoom: 14.4746,
             ),
-            styleString: 'mapbox:////styles/mapbox/outdoors-v12',
+            styleString: 'mapbox://styles/mapbox/streets-v12',
             onMapCreated: (controller) {
               setState(() {
                 _controller = controller;
