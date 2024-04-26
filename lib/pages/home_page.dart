@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 
@@ -19,15 +20,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  late MapboxMapController _controller;
+  late final MapboxMapController _controller;
+  late Position currentPositionOfUser;
 
-  @override
-  void initState() {
-    super.initState();
-    // Set Mapbox access token at runtime
-
-  }
-
+ getCurrentLiveLocationOfUser () async{
+   Position positionOfUser = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+   currentPositionOfUser = positionOfUser;
+   LatLng positonOfUser = LatLng(currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
+   CameraPosition cameraPosition = CameraPosition(target: positonOfUser, zoom: 14);
+   _controller!.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
+ }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +41,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               target: LatLng(37.42796133580664, -122.085749655962),
               zoom: 14.4746,
             ),
+            styleString: 'mapbox:////styles/mapbox/outdoors-v12',
             onMapCreated: (controller) {
               setState(() {
                 _controller = controller;
-              });
+              }
+
+              );
+              getCurrentLiveLocationOfUser();
             },
           ),
         ],

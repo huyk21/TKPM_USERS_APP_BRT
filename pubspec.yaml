@@ -42,6 +42,8 @@ dependencies:
   firebase_storage:
   google_maps_flutter:
   mapbox_gl:
+  permission_handler:
+  geolocator:
 dev_dependencies:
   flutter_test:
     sdk: flutter
