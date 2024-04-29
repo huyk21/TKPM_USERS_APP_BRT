@@ -44,6 +44,13 @@ dependencies:
   mapbox_gl:
   permission_handler:
   geolocator:
+  provider:
+  restart_app:
+  http:
+  url_launcher:
+  loading_animation_widget:
+  flutter_geofire:
+  flutter_polyline_points:
 dev_dependencies:
   flutter_test:
     sdk: flutter

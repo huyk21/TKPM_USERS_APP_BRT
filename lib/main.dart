@@ -1,8 +1,9 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:users_app_uber/appInfo/app_info.dart';
 import 'package:users_app_uber/authentication/login_screen.dart';
 import 'package:users_app_uber/authentication/signup_screen.dart';
 import 'package:users_app_uber/pages/home_page.dart';
@@ -30,20 +31,23 @@ Future<void>main() async {
 
 }
 
-class MyApp extends StatelessWidget {
-
+class MyApp extends StatelessWidget
+{
   const MyApp({super.key});
 
-
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black
+  Widget build(BuildContext context)
+  {
+    return ChangeNotifierProvider(
+      create: (context) => AppInfo(),
+      child: MaterialApp(
+        title: 'Flutter User App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: Colors.black,
+        ),
+        home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : HomePage(),
       ),
-      home:HomePage(),
     );
   }
 }
