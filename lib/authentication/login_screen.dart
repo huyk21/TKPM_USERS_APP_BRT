@@ -69,17 +69,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           //check if user is blocked
          if((snapshot.snapshot.value as Map)["blockStatus"] == "no"){
            userName = (snapshot.snapshot.value as Map)["name"];
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+           Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomePage()));
          }
          else{
            FirebaseAuth.instance.signOut();
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+           Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignUpScreen()));
            commonMethods.displaySnackBar("You are Blocked, Contact admin: admin@email.com", context);
          }
         }
         else{
           FirebaseAuth.instance.signOut();
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const SignUpScreen()));
           commonMethods.displaySnackBar("User does not exist", context);
         }
       });
@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     Image.asset(
                       "assets/images/logo.png",
                     ),
-                    Text(
+                    const Text(
                       "Login as a user",
                       style: TextStyle(
                         fontSize: 26,
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               TextField(
                                 controller: emailTextEditingController,
                                 keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: "Email",
                                   prefixIcon: Icon(Icons.email),
                                   labelStyle: TextStyle(
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 controller: passwordTextEditingController,
                                 obscureText: true,
                                 keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: "Password",
                                   prefixIcon: Icon(Icons.lock),
                                   labelStyle: TextStyle(
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     const SizedBox(height: 12,),
                     TextButton(
                       onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const SignUpScreen()));
                       },
                       child: const Text(
                           "Dont have an Account? Register here",
