@@ -81,7 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
     };
 
     usersRef.set(userDataMap);
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomePage()));
 
 
   }
@@ -97,8 +97,8 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
               Image.asset(
                 "assets/images/logo.png",
               ),
-              Text(
-                "Create a User\'s Account",
+              const Text(
+                "Create a User Account",
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                         TextField(
                           controller: usernameTextEditingController,
                           keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: "User Name",
                             prefixIcon: Icon(Icons.person),
                             labelStyle: TextStyle(
@@ -169,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                       controller: passwordTextEditingController,
                       obscureText: true,
                       keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Password",
                         prefixIcon: Icon(Icons.lock),
                         labelStyle: TextStyle(
@@ -205,7 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
               const SizedBox(height: 12,),
               TextButton(
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginScreen()));
                 },
                 child: const Text(
                   "Already have an account?",

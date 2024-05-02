@@ -198,7 +198,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
             ),
 
             //display prediction results for destination place
-            (dropOffPredictionsPlacesList.length > 0)
+            (dropOffPredictionsPlacesList.isNotEmpty)
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: ListView.separated(
