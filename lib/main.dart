@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: Colors.black,
         ),
-        home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : HomePage(),
+        home: FirebaseAuth.instance.currentUser == null ? const LoginScreen() : const HomePage(),
       ),
     );
   }

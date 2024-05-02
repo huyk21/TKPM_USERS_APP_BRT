@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage>
   {
     if(carIconNearbyDriver == null)
     {
-      ImageConfiguration configuration = createLocalImageConfiguration(context, size: Size(0.5, 0.5));
+      ImageConfiguration configuration = createLocalImageConfiguration(context, size: const Size(0.5, 0.5));
       BitmapDescriptor.fromAssetImage(configuration, "assets/images/tracking.png").then((iconImage)
       {
         carIconNearbyDriver = iconImage;
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage>
         {
           FirebaseAuth.instance.signOut();
 
-          Navigator.push(context, MaterialPageRoute(builder: (c)=> LoginScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
 
           cMethods.displaySnackBar("you are blocked. Contact admin: alizeb875@gmail.com", context);
         }
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage>
       else
       {
         FirebaseAuth.instance.signOut();
-        Navigator.push(context, MaterialPageRoute(builder: (c)=> LoginScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
       }
     });
   }
@@ -344,14 +344,14 @@ class _HomePageState extends State<HomePage>
       markerSet.clear();
     });
 
-    Set<Marker> markersTempSet = Set<Marker>();
+    Set<Marker> markersTempSet = <Marker>{};
 
     for(OnlineNearbyDrivers eachOnlineNearbyDriver in ManageDriversMethods.nearbyOnlineDriversList)
     {
       LatLng driverCurrentPosition = LatLng(eachOnlineNearbyDriver.latDriver!, eachOnlineNearbyDriver.lngDriver!);
 
       Marker driverMarker = Marker(
-        markerId: MarkerId("driver ID = " + eachOnlineNearbyDriver.uidDriver.toString()),
+        markerId: MarkerId("driver ID = ${eachOnlineNearbyDriver.uidDriver}"),
         position: driverCurrentPosition,
         icon: carIconNearbyDriver!,
       );
@@ -642,7 +642,7 @@ class _HomePageState extends State<HomePage>
 
   searchDriver()
   {
-    if(availableNearbyOnlineDriversList!.length == 0)
+    if(availableNearbyOnlineDriversList!.isEmpty)
     {
       cancelRideRequest();
       resetAppNow();
@@ -817,7 +817,7 @@ class _HomePageState extends State<HomePage>
               GestureDetector(
                 onTap: ()
                 {
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=> TripsHistoryPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (c)=> const TripsHistoryPage()));
                 },
                 child: ListTile(
                   leading: IconButton(
@@ -831,7 +831,7 @@ class _HomePageState extends State<HomePage>
               GestureDetector(
                 onTap: ()
                 {
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=> AboutPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (c)=> const AboutPage()));
                 },
                 child: ListTile(
                   leading: IconButton(
@@ -847,7 +847,7 @@ class _HomePageState extends State<HomePage>
                 {
                   FirebaseAuth.instance.signOut();
 
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=> LoginScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
                 },
                 child: ListTile(
                   leading: IconButton(
@@ -936,7 +936,7 @@ class _HomePageState extends State<HomePage>
             left: 0,
             right: 0,
             bottom: -80,
-            child: Container(
+            child: SizedBox(
               height: searchContainerHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -945,7 +945,7 @@ class _HomePageState extends State<HomePage>
                   ElevatedButton(
                     onPressed: () async
                     {
-                      var responseFromSearchPage = await Navigator.push(context, MaterialPageRoute(builder: (c)=> SearchDestinationPage()));
+                      var responseFromSearchPage = await Navigator.push(context, MaterialPageRoute(builder: (c)=> const SearchDestinationPage()));
 
                       if(responseFromSearchPage == "placeSelected")
                       {

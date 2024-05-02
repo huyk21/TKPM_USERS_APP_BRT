@@ -104,7 +104,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage>
                             const SizedBox(width: 5,),
 
                             Text(
-                              "\$ " + tripsList[index]["fareAmount"].toString(),
+                              "\$ ${tripsList[index]["fareAmount"]}",
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,
