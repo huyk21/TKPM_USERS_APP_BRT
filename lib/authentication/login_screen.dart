@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               child: Column(
                   children: [
                     Image.asset(
-                      "assets/images/logo.png",
+                      "assets/images/BRT_logo.jpeg",
                     ),
                     const Text(
                       "Login as a user",
