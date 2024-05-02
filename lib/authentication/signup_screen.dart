@@ -95,7 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
           child: Column(
             children: [
               Image.asset(
-                "assets/images/logo.png",
+                "assets/images/BRT_logo.jpeg",
               ),
               const Text(
                 "Create a User Account",

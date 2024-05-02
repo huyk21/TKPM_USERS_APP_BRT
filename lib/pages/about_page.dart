@@ -37,7 +37,7 @@ class _AboutPageState extends State<AboutPage>
           children: [
 
             Image.asset(
-              "assets/images/logo.png",
+              "assets/images/BRT_logo.jpeg",
             ),
 
             const SizedBox(
@@ -47,7 +47,7 @@ class _AboutPageState extends State<AboutPage>
             const Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                "This app is developed by Coding Cafe.",
+                "This app is developed by BRT Group.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey,
@@ -64,7 +64,7 @@ class _AboutPageState extends State<AboutPage>
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "In case of any misuse or any report please contact admin at alizeb875@gmail.com",
+                "In case of any misuse or any report please contact us at BeRightThere@gmail.com",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey,
