@@ -1094,9 +1094,9 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                               Image.asset(
-                                "assets/images/uberexec.png",
-                                height: 40,
-                                width: 45,
+                                "assets/images/bike.png",
+                                height: 41,
+                                width: 46,
                               ),
                               Text(
                                 tripDirectionDetailsInfo != null ? "\$${(cMethods.calculateFareAmount(tripDirectionDetailsInfo!)).toString()}" : "",
