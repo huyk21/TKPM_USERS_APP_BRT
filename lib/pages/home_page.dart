@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage>
 
           Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
 
-          cMethods.displaySnackBar("you are blocked. Contact admin: alizeb875@gmail.com", context);
+          cMethods.displaySnackBar("You are blocked. Contact our admin at: BeRightThere@gmail.com", context);
         }
       }
       else
@@ -1081,7 +1081,7 @@ class _HomePageState extends State<HomePage>
                                     },
                                     child: Image.asset(
                                       "assets/images/uberexec.png",
-                                      height: 122,
+                                      height: 117,
                                       width: 122,
                                     ),
                                   ),
