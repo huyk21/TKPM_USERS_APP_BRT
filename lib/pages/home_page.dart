@@ -1095,7 +1095,7 @@ class _HomePageState extends State<HomePage>
                               ),
                               Image.asset(
                                 "assets/images/bike.png",
-                                height: 40,
+                                height: 41,
                                 width: 46,
                               ),
                               Text(
