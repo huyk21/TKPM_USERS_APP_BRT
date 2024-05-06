@@ -546,17 +546,17 @@ class _HomePageState extends State<HomePage>
 
       if(status == "ended")
       {
-        if((eventSnapshot.snapshot.value as Map)["fareAmount"] != null)
-        {
-          double fareAmount = double.parse((eventSnapshot.snapshot.value as Map)["fareAmount"].toString());
+        // if((eventSnapshot.snapshot.value as Map)["fareAmount"] != null)
+        // {
+        //   double fareAmount = double.parse((eventSnapshot.snapshot.value as Map)["fareAmount"].toString());
 
-          var responseFromPaymentDialog = await showDialog(
-            context: context,
-            builder: (BuildContext context) => PaymentDialog(fareAmount: fareAmount.toString()),
-          );
+          // var responseFromPaymentDialog = await showDialog(
+          //   context: context,
+          //   builder: (BuildContext context) => PaymentDialog(fareAmount: fareAmount.toString()),
+          // );
 
-          if(responseFromPaymentDialog == "paid")
-          {
+          // if(responseFromPaymentDialog == "paid")
+          // {
             tripRequestRef!.onDisconnect();
             tripRequestRef = null;
 
@@ -565,9 +565,9 @@ class _HomePageState extends State<HomePage>
 
             resetAppNow();
 
-            Restart.restartApp();
-          }
-        }
+            // Restart.restartApp();
+          // }
+        // }
       }
     });
   }
