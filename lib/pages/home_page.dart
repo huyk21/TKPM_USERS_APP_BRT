@@ -987,33 +987,33 @@ class _HomePageState extends State<HomePage>
                     ),
                   ),
 
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(24)
-                    ),
-                    child: const Icon(
-                      Icons.home,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
-
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(24)
-                    ),
-                    child: const Icon(
-                      Icons.work,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {},
+                  //   style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Colors.grey,
+                  //       shape: const CircleBorder(),
+                  //       padding: const EdgeInsets.all(24)
+                  //   ),
+                  //   child: const Icon(
+                  //     Icons.home,
+                  //     color: Colors.white,
+                  //     size: 25,
+                  //   ),
+                  // ),
+                  //
+                  // ElevatedButton(
+                  //   onPressed: () {},
+                  //   style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Colors.grey,
+                  //       shape: const CircleBorder(),
+                  //       padding: const EdgeInsets.all(24)
+                  //   ),
+                  //   child: const Icon(
+                  //     Icons.work,
+                  //     color: Colors.white,
+                  //     size: 25,
+                  //   ),
+                  // ),
 
                 ],
               ),
