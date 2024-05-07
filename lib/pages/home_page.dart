@@ -926,6 +926,7 @@ class _HomePageState extends State<HomePage>
                 else
                 {
                   resetAppNow();
+                  Restart.restartApp();
                 }
               },
               child: Container(
@@ -1194,6 +1195,7 @@ class _HomePageState extends State<HomePage>
                       {
                         resetAppNow();
                         cancelRideRequest();
+                        Restart.restartApp();
                       },
                       child: Container(
                         height: 50,
