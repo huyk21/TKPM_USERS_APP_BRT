@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
@@ -26,7 +26,6 @@ import 'package:users_app_uber/pages/about_page.dart';
 import 'package:users_app_uber/pages/search_destination_page.dart';
 import 'package:users_app_uber/pages/trips_history_page.dart';
 import 'package:users_app_uber/widgets/info_dialog.dart';
-import 'package:users_app_uber/widgets/payment_dialog.dart';
 
 import '../appInfo/app_info.dart';
 import '../widgets/loading_dialog.dart';
@@ -79,23 +78,6 @@ class _HomePageState extends State<HomePage>
         carIconNearbyDriver = iconImage;
       });
     }
-  }
-
-  void updateMapTheme(GoogleMapController controller)
-  {
-    getJsonFileFromThemes("themes/night_style.json").then((value)=> setGoogleMapStyle(value, controller));
-  }
-
-  Future<String> getJsonFileFromThemes(String mapStylePath) async
-  {
-    ByteData byteData = await rootBundle.load(mapStylePath);
-    var list = byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    return utf8.decode(list);
-  }
-
-  setGoogleMapStyle(String googleMapStyle, GoogleMapController controller)
-  {
-    controller.setMapStyle(googleMapStyle);
   }
 
   getCurrentLiveLocationOfUser() async
@@ -364,16 +346,51 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  Future<String?> getVehicleType(String driverKey) async {
+    try {
+      DatabaseReference driverRef = FirebaseDatabase.instance
+          .ref()
+          .child("drivers")
+          .child(driverKey);
+
+      DatabaseEvent event = await driverRef.once();
+      DataSnapshot snap = event.snapshot;
+
+      if (snap.exists) {
+        Map data = snap.value as Map;
+        if (data.containsKey("car_details") && data["car_details"].containsKey("vehicle_type")) {
+          return data["car_details"]["vehicle_type"] as String;
+        } else {
+          if (kDebugMode) {
+            print("car_details or vehicle_type field is missing for this driver");
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print("Driver with key $driverKey does not exist.");
+        }
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error fetching vehicle type: $error');
+      }
+    }
+
+    return null;
+  }
+
   initializeGeoFireListener()
   {
     Geofire.initialize("onlineDrivers");
     Geofire.queryAtLocation(currentPositionOfUser!.latitude, currentPositionOfUser!.longitude, 22)!
         .listen((driverEvent)
-    {
+    async {
       if(driverEvent != null)
       {
         var onlineDriverChild = driverEvent["callBack"];
-
+        String driverKey = driverEvent["key"];
+        String? type = await getVehicleType(driverKey);
+        
         switch(onlineDriverChild)
         {
           case Geofire.onKeyEntered:
@@ -381,13 +398,13 @@ class _HomePageState extends State<HomePage>
             onlineNearbyDrivers.uidDriver = driverEvent["key"];
             onlineNearbyDrivers.latDriver = driverEvent["latitude"];
             onlineNearbyDrivers.lngDriver = driverEvent["longitude"];
+            onlineNearbyDrivers.vehicleType = type;
             ManageDriversMethods.nearbyOnlineDriversList.add(onlineNearbyDrivers);
 
-            if(nearbyOnlineDriversKeysLoaded == true)
-            {
+
               //update drivers on google map
-              updateAvailableNearbyOnlineDriversOnMap();
-            }
+            updateAvailableNearbyOnlineDriversOnMap();
+
 
             break;
 
@@ -404,6 +421,7 @@ class _HomePageState extends State<HomePage>
             onlineNearbyDrivers.uidDriver = driverEvent["key"];
             onlineNearbyDrivers.latDriver = driverEvent["latitude"];
             onlineNearbyDrivers.lngDriver = driverEvent["longitude"];
+            onlineNearbyDrivers.vehicleType = type;
             ManageDriversMethods.updateOnlineNearbyDriversLocation(onlineNearbyDrivers);
 
             //update drivers on google map
@@ -468,6 +486,7 @@ class _HomePageState extends State<HomePage>
       "driverPhone": "",
       "driverPhoto": "",
       "fareAmount": "",
+      "vehicleType": "",
       "status": "new",
     };
 
@@ -478,6 +497,11 @@ class _HomePageState extends State<HomePage>
       if(eventSnapshot.snapshot.value == null)
       {
         return;
+      }
+
+      if((eventSnapshot.snapshot.value as Map)["vehicleType"] != null)
+      {
+        vehicleType = (eventSnapshot.snapshot.value as Map)["vehicleType"];
       }
 
       if((eventSnapshot.snapshot.value as Map)["driverName"] != null)
@@ -564,8 +588,7 @@ class _HomePageState extends State<HomePage>
             tripStreamSubscription = null;
 
             resetAppNow();
-
-            // Restart.restartApp();
+            Restart.restartApp();
           // }
         // }
       }
@@ -877,7 +900,6 @@ class _HomePageState extends State<HomePage>
             onMapCreated: (GoogleMapController mapController)
             {
               controllerGoogleMap = mapController;
-              updateMapTheme(controllerGoogleMap!);
 
               googleMapCompleterController.complete(controllerGoogleMap);
 
@@ -1030,6 +1052,7 @@ class _HomePageState extends State<HomePage>
 
                         displayRequestContainer();
                         availableNearbyOnlineDriversList = ManageDriversMethods.nearbyOnlineDriversList;
+                        availableNearbyOnlineDriversList?.retainWhere((element) => element.vehicleType == "Car");
                         searchDriver();
                       },
                       child: Card(
@@ -1075,6 +1098,7 @@ class _HomePageState extends State<HomePage>
 
                         displayRequestContainer();
                         availableNearbyOnlineDriversList = ManageDriversMethods.nearbyOnlineDriversList;
+                        availableNearbyOnlineDriversList?.retainWhere((element) => element.vehicleType == "Bike");
                         searchDriver();
                       },
                       child: Card(

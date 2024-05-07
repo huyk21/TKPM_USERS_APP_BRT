@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restart_app/restart_app.dart';
 import '../methods/common_methods.dart';
 
 

@@ -20,5 +20,6 @@ class ManageDriversMethods
 
     nearbyOnlineDriversList[index].latDriver = nearbyOnlineDriverInformation.latDriver;
     nearbyOnlineDriversList[index].lngDriver = nearbyOnlineDriverInformation.lngDriver;
+    nearbyOnlineDriversList[index].vehicleType = nearbyOnlineDriverInformation.vehicleType;
   }
 }
