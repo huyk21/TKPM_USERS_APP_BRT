@@ -2,26 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:users_app_uber/appInfo/app_info.dart';
 import 'package:users_app_uber/global/global_const.dart';
+import 'package:users_app_uber/global/trip_var.dart';
 import 'package:users_app_uber/methods/common_methods.dart';
 import 'package:users_app_uber/models/address_model.dart';
 import 'package:users_app_uber/models/prediction_model.dart';
 import 'package:users_app_uber/widgets/loading_dialog.dart';
 
-class PredictionPlaceUI extends StatefulWidget
-{
+class PredictionPlaceUI extends StatefulWidget {
   PredictionModel? predictedPlaceData;
-
-  PredictionPlaceUI({super.key, this.predictedPlaceData,});
+  late final bool isPickup;
+  late final TextEditingController controller;
+  PredictionPlaceUI({super.key, this.predictedPlaceData, this.isPickup = false, required this.controller});
 
   @override
   State<PredictionPlaceUI> createState() => _PredictionPlaceUIState();
 }
 
+
 class _PredictionPlaceUIState extends State<PredictionPlaceUI>
 {
   ///Place Details - Places API
-  fetchClickedPlaceDetails(String placeID) async
-  {
+  void fetchClickedPlaceDetails(String placeID) async {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -29,30 +30,38 @@ class _PredictionPlaceUIState extends State<PredictionPlaceUI>
     );
 
     String urlPlaceDetailsAPI = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$googleMapKey";
-
     var responseFromPlaceDetailsAPI = await CommonMethods.sendRequestToAPI(urlPlaceDetailsAPI);
 
-    Navigator.pop(context);
+    pickUp = responseFromPlaceDetailsAPI["result"]["name"];
+    Navigator.pop(context); // Close the loading dialog
 
-    if(responseFromPlaceDetailsAPI == "error")
-    {
+    if (responseFromPlaceDetailsAPI == "error") {
       return;
     }
 
-    if(responseFromPlaceDetailsAPI["status"] == "OK")
-    {
-      AddressModel dropOffLocation = AddressModel();
+    if (responseFromPlaceDetailsAPI["status"] == "OK") {
+      AddressModel location = AddressModel();
+      location.placeName = responseFromPlaceDetailsAPI["result"]["name"];
+      location.latitudePosition = responseFromPlaceDetailsAPI["result"]["geometry"]["location"]["lat"];
+      location.longitudePosition = responseFromPlaceDetailsAPI["result"]["geometry"]["location"]["lng"];
+      location.placeID = placeID;
 
-      dropOffLocation.placeName = responseFromPlaceDetailsAPI["result"]["name"];
-      dropOffLocation.latitudePosition = responseFromPlaceDetailsAPI["result"]["geometry"]["location"]["lat"];
-      dropOffLocation.longitudePosition = responseFromPlaceDetailsAPI["result"]["geometry"]["location"]["lng"];
-      dropOffLocation.placeID = placeID;
+      if (widget.isPickup) {
+        Provider.of<AppInfo>(context, listen: false).updatePickUpLocation(location);
+        widget.controller.text = location.placeName ?? "";
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Pickup location updated to ${location.placeName}"))
+        );
 
-      Provider.of<AppInfo>(context, listen: false).updateDropOffLocation(dropOffLocation);
-      
-      Navigator.pop(context, "placeSelected");
+      } else {
+        Provider.of<AppInfo>(context, listen: false).updateDropOffLocation(location);
+        Navigator.pop(context, "placeSelected");
+      }
+
+
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +69,9 @@ class _PredictionPlaceUIState extends State<PredictionPlaceUI>
       onPressed: ()
       {
         fetchClickedPlaceDetails(widget.predictedPlaceData!.place_id.toString());
+
+
+
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,

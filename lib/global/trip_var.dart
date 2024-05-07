@@ -6,3 +6,4 @@ String status = '';
 String carDetailsDriver = '';
 String vehicleType = '';
 String tripStatusDisplay = 'Driver is Arriving';
+String pickUp = '';
