@@ -20,6 +20,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
 {
   TextEditingController pickUpTextEditingController = TextEditingController();
   TextEditingController destinationTextEditingController = TextEditingController();
+  TextEditingController numberEditingController = TextEditingController();
   List<PredictionModel> dropOffPredictionsPlacesList = [];
 
   ///Places API - Place AutoComplete
@@ -53,6 +54,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
   {
     String userAddress = Provider.of<AppInfo>(context, listen: false).pickUpLocation!.humanReadableAddress ?? "";
     pickUpTextEditingController.text = userAddress;
+    bool isTongDai =  true;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -62,7 +64,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
             Card(
               elevation: 10,
               child: Container(
-                height: 230,
+                height: 290,//230
                 decoration: const BoxDecoration(
                   color: Colors.black12,
                   boxShadow:
@@ -191,6 +193,56 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
                         ],
                       ),
 
+                      Visibility(
+                          visible: isTongDai,
+                          child: const SizedBox(height: 11,),),
+
+                      Visibility(
+                        visible: isTongDai,
+                        child: Row(
+                          children: [
+
+                            const Icon(
+                              Icons.phone,
+                              color: Colors.grey,
+                            ),
+
+                            const SizedBox(width: 10,),
+
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: TextField(
+                                    controller: numberEditingController,
+                                    onChanged: (inputText)
+                                    {
+                                      // searchLocation(inputText);
+
+
+                                      //change number here
+
+
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: "Guest's phone number",
+                                        fillColor: Colors.white12,
+                                        filled: true,
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.only(left: 11, top: 9, bottom: 9)
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),)
                     ],
                   ),
                 ),
