@@ -69,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           //check if user is blocked
          if((snapshot.snapshot.value as Map)["blockStatus"] == "no"){
            userName = (snapshot.snapshot.value as Map)["name"];
+           userName = (snapshot.snapshot.value as Map)["isTongDai"];
            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomePage()));
          }
          else{

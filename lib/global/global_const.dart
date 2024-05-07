@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 String userName = "";
+String isTongDai = "";
 String googleMapKey = "AIzaSyDuDxriw8CH8NbVLiXtKFQ2Nb64AoRSdyg";
 const CameraPosition googleMapsInitialLocation = CameraPosition(
   target: LatLng(10, 100),

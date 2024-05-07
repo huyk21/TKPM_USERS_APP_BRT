@@ -75,6 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
       "email": emailTextEditingController.text.trim(),
       "phone": phoneTextEditingController.text.trim(),
       "id": userFirebase.uid,
+      "isTongDai": "no",
       "blockStatus": "no",
     };
 
