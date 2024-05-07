@@ -231,11 +231,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
                                     onChanged: (inputText)
                                     {
                                       // searchLocation(inputText);
-
-
-                                      //change number here
-
-
+                                      userPhone = inputText;
                                     },
                                     decoration: const InputDecoration(
                                         hintText: "Guest's phone number",
@@ -282,11 +278,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage>
                                     onChanged: (inputText)
                                     {
                                       // searchLocation(inputText);
-
-
-                                      //change name here
-
-
+                                      userName = inputText;
                                     },
                                     decoration: const InputDecoration(
                                         hintText: "Guest's name",
