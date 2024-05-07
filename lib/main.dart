@@ -5,7 +5,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:users_app_uber/appInfo/app_info.dart';
 import 'package:users_app_uber/authentication/login_screen.dart';
-import 'package:users_app_uber/authentication/signup_screen.dart';
 import 'package:users_app_uber/pages/home_page.dart';
 
 
