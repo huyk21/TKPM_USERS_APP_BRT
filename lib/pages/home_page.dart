@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -54,6 +53,8 @@ class _HomePageState extends State<HomePage>
   double requestContainerHeight = 0;
   double tripContainerHeight = 0;
   DirectionDetails? tripDirectionDetailsInfo;
+  DirectionDetails? tripDirectionDetailsInfo_CAR; // so suck to do this
+  DirectionDetails? tripDirectionDetailsInfo_BIKE;
   List<LatLng> polylineCoOrdinates = [];
   Set<Polyline> polylineSet = {};
   Set<Marker> markerSet = {};
@@ -160,11 +161,14 @@ class _HomePageState extends State<HomePage>
     );
 
     ///Directions API
-    var detailsFromDirectionAPI = await CommonMethods.getDirectionDetailsFromAPI(pickupGeoGraphicCoOrdinates, dropOffDestinationGeoGraphicCoOrdinates);
+    var detailsFromDirectionAPI = await CommonMethods.getDirectionDetailsFromAPI(pickupGeoGraphicCoOrdinates, dropOffDestinationGeoGraphicCoOrdinates,vehicle: "Car");
     setState(() {
-      tripDirectionDetailsInfo = detailsFromDirectionAPI;
+      tripDirectionDetailsInfo = detailsFromDirectionAPI; // stupid stuff
+      tripDirectionDetailsInfo_CAR = tripDirectionDetailsInfo; // to not loose your mind
     });
-
+    tripDirectionDetailsInfo_BIKE = await CommonMethods.getDirectionDetailsFromAPI(pickupGeoGraphicCoOrdinates, dropOffDestinationGeoGraphicCoOrdinates,vehicle: "Bike");
+    print(tripDirectionDetailsInfo_BIKE!.calculateFareAmount());
+    print(tripDirectionDetailsInfo_CAR!.calculateFareAmount());
     Navigator.pop(context);
 
     //draw route from pickup to dropOffDestination
@@ -391,7 +395,7 @@ class _HomePageState extends State<HomePage>
         var onlineDriverChild = driverEvent["callBack"];
         String driverKey = driverEvent["key"];
         String? type = await getVehicleType(driverKey);
-        
+
         switch(onlineDriverChild)
         {
           case Geofire.onKeyEntered:
@@ -487,7 +491,7 @@ class _HomePageState extends State<HomePage>
       "driverPhone": "",
       "driverPhoto": "",
       "fareAmount": "",
-      "vehicleType": "",
+      "vehicleType": "Car",
       "status": "new",
     };
 
@@ -503,6 +507,8 @@ class _HomePageState extends State<HomePage>
       if((eventSnapshot.snapshot.value as Map)["vehicleType"] != null)
       {
         vehicleType = (eventSnapshot.snapshot.value as Map)["vehicleType"];
+        if (vehicleType == "") vehicleType = "Car";
+        vehicleBasePrice = await CommonMethods.retrieveVehicleBaseInfo(vehicleType);
       }
 
       if((eventSnapshot.snapshot.value as Map)["driverName"] != null)
@@ -1066,7 +1072,7 @@ class _HomePageState extends State<HomePage>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                tripDirectionDetailsInfo != null ? "${tripDirectionDetailsInfo!.durationTextString} - ${tripDirectionDetailsInfo!.distanceTextString}" : "",
+                                tripDirectionDetailsInfo_CAR != null ? "${tripDirectionDetailsInfo_CAR!.durationTextString} - ${tripDirectionDetailsInfo_CAR!.distanceTextString}" : "",
                                 style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.white70,
@@ -1079,7 +1085,7 @@ class _HomePageState extends State<HomePage>
                                 width: 100,
                               ),
                               Text(
-                                tripDirectionDetailsInfo != null ? "\$${(cMethods.calculateFareAmount(tripDirectionDetailsInfo!)).toString()}" : "",
+                                tripDirectionDetailsInfo_CAR != null ? "\$${(tripDirectionDetailsInfo_CAR!.calculateFareAmount()).toString()}" : "",
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.white70,
@@ -1112,7 +1118,7 @@ class _HomePageState extends State<HomePage>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                tripDirectionDetailsInfo != null ? "${tripDirectionDetailsInfo!.durationTextString} - ${tripDirectionDetailsInfo!.distanceTextString}" : "",
+                                tripDirectionDetailsInfo_BIKE != null ? "${tripDirectionDetailsInfo_BIKE!.durationTextString} - ${tripDirectionDetailsInfo_BIKE!.distanceTextString}" : "",
                                 style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.white70,
@@ -1125,7 +1131,7 @@ class _HomePageState extends State<HomePage>
                                 width: 100,
                               ),
                               Text(
-                                tripDirectionDetailsInfo != null ? "\$${(cMethods.calculateFareAmount(tripDirectionDetailsInfo!)).toString()}" : "",
+                                tripDirectionDetailsInfo_BIKE != null ? "\$${(tripDirectionDetailsInfo_BIKE!.calculateFareAmount()).toString()}" : "",
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.white70,

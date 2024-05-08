@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:users_app_uber/appInfo/app_info.dart';
 import 'package:users_app_uber/global/global_const.dart';
 import 'package:http/http.dart' as http;
+import 'package:users_app_uber/global/trip_var.dart';
 import 'package:users_app_uber/models/address_model.dart';
 
 import '../models/direction_details.dart';
@@ -78,8 +80,19 @@ class CommonMethods
     return humanReadableAddress;
   }
 
+  static retrieveVehicleBaseInfo(String vehicleType) async 
+  {
+    var snap = await FirebaseDatabase.instance
+        .ref()
+        .child("vehicle_base_info")
+        .child(vehicleType)
+        .once();
+
+    return (snap.snapshot.value as Map)["base_price"];
+  }
+
   ///Directions API
-  static Future<DirectionDetails?> getDirectionDetailsFromAPI(LatLng source, LatLng destination) async
+  static Future<DirectionDetails?> getDirectionDetailsFromAPI(LatLng source, LatLng destination, {String vehicle = "Car"}) async
   {
     String urlDirectionsAPI = "https://maps.googleapis.com/maps/api/directions/json?destination=${destination.latitude},${destination.longitude}&origin=${source.latitude},${source.longitude}&mode=driving&key=$googleMapKey";
 
@@ -90,7 +103,7 @@ class CommonMethods
       return null;
     }
 
-    DirectionDetails detailsModel = DirectionDetails();
+    DirectionDetails detailsModel = DirectionDetails.getSubClass(vehicle);
 
     detailsModel.distanceTextString = responseFromDirectionsAPI["routes"][0]["legs"][0]["distance"]["text"];
     detailsModel.distanceValueDigits = responseFromDirectionsAPI["routes"][0]["legs"][0]["distance"]["value"];
@@ -99,21 +112,22 @@ class CommonMethods
     detailsModel.durationValueDigits = responseFromDirectionsAPI["routes"][0]["legs"][0]["duration"]["value"];
 
     detailsModel.encodedPoints = responseFromDirectionsAPI["routes"][0]["overview_polyline"]["points"];
-
+    
+    detailsModel.baseFareAmount = double.parse(await retrieveVehicleBaseInfo(vehicle));
     return detailsModel;
   }
 
-  calculateFareAmount(DirectionDetails directionDetails)
-  {
-    double distancePerKmAmount = 0.4;
-    double durationPerMinuteAmount = 0.3;
-    double baseFareAmount = 2;
+  // calculateFareAmount(DirectionDetails directionDetails)
+  // {
+  //   double distancePerKmAmount = 0.4;
+  //   double durationPerMinuteAmount = 0.3;
+  //   double baseFareAmount = 2;
 
-    double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
-    double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+  //   double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+  //   double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
-    double overAllTotalFareAmount = baseFareAmount + totalDistanceTravelFareAmount + totalDurationSpendFareAmount;
+  //   double overAllTotalFareAmount = baseFareAmount + totalDistanceTravelFareAmount + totalDurationSpendFareAmount;
 
-    return overAllTotalFareAmount.toStringAsFixed(1);
-  }
+  //   return overAllTotalFareAmount.toStringAsFixed(1);
+  // }
 }
