@@ -5,6 +5,7 @@ class AppInfo extends ChangeNotifier
 {
   AddressModel? pickUpLocation;
   AddressModel? dropOffLocation;
+  AddressModel? savedLocation;
 
   void updatePickUpLocation(AddressModel pickUpModel)
   {
@@ -15,6 +16,11 @@ class AppInfo extends ChangeNotifier
   void updateDropOffLocation(AddressModel dropOffModel)
   {
     dropOffLocation = dropOffModel;
+    notifyListeners();
+  }
+
+  void updateSavedLocation(AddressModel savedModel) {
+    savedLocation = savedModel;
     notifyListeners();
   }
 }
