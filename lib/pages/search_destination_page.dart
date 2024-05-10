@@ -136,109 +136,112 @@ class _SearchDestinationPageState extends State<SearchDestinationPage> {
       appBar: AppBar(
         title: const Text("Set Dropoff Location"),
       ),
-      body: Column(
-        children: [
-          // Text field for "Your current location"
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Row(
-              children: [
-                const Icon(Icons.place, color: Colors.green),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: TextField(
-                    controller: pickUpTextEditingController,
-                    onChanged:
-                        searchPickupLocation, // Attach your search logic here
-                    decoration: const InputDecoration(
-                      hintText: "Your current location",
-                      fillColor: Colors.grey,
-                      filled: true,
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Text field for "Destination Address"
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Row(
-              children: [
-                const Icon(Icons.place, color: Colors.red),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: TextField(
-                    controller: destinationTextEditingController,
-                    onChanged:
-                        searchDestinationLocation, // Attach your search logic here
-                    decoration: const InputDecoration(
-                      hintText: "Destination Address",
-                      fillColor: Colors.grey,
-                      filled: true,
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Add "Select" button to confirm destination
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context, "placeSelected");
-            },
-            child: const Text("Confirm Locations"),
-          ),
-          // Pickup predictions
-          if (pickUpPredictionsPlacesList.isNotEmpty)
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Text field for "Your current location"
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    child: PredictionPlaceUI(
-                      predictedPlaceData: pickUpPredictionsPlacesList[index],
-                      isPickup: true,
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                children: [
+                  const Icon(Icons.place, color: Colors.green),
+                  const SizedBox(width: 8.0),
+                  Expanded(
+                    child: TextField(
                       controller: pickUpTextEditingController,
+                      onChanged: searchPickupLocation,
+                      decoration: const InputDecoration(
+                        hintText: "Your current location",
+                        fillColor: Colors.grey,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const SizedBox(height: 2),
-                itemCount: pickUpPredictionsPlacesList.length,
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
+                  ),
+                ],
               ),
             ),
-          // Drop-off predictions
-          if (dropOffPredictionsPlacesList.isNotEmpty)
+            // Text field for "Destination Address"
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    child: PredictionPlaceUI(
-                      predictedPlaceData: dropOffPredictionsPlacesList[index],
-                      isPickup: false,
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                children: [
+                  const Icon(Icons.place, color: Colors.red),
+                  const SizedBox(width: 8.0),
+                  Expanded(
+                    child: TextField(
                       controller: destinationTextEditingController,
+                      onChanged: searchDestinationLocation,
+                      decoration: const InputDecoration(
+                        hintText: "Destination Address",
+                        fillColor: Colors.grey,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const SizedBox(height: 2),
-                itemCount: dropOffPredictionsPlacesList.length,
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
+                  ),
+                ],
               ),
             ),
-        ],
+            // Add "Confirm" button to confirm destination
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, "placeSelected");
+              },
+              child: const Text("Confirm Locations"),
+            ),
+            // Pickup predictions list (if available)
+            if (pickUpPredictionsPlacesList.isNotEmpty)
+
+            // For pickup predictions
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 3,
+                      child: PredictionPlaceUI(
+                        predictedPlaceData: pickUpPredictionsPlacesList[index],
+                        isPickup: true,  // Here we pass true for pickup locations
+                        controller: pickUpTextEditingController,
+                      ),
+
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 2),
+                  itemCount: pickUpPredictionsPlacesList.length,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                ),
+              ),
+
+            // Drop-off predictions list (if available)
+            if (dropOffPredictionsPlacesList.isNotEmpty)
+            // For drop-off predictions
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 3,
+                      child: PredictionPlaceUI(
+                        predictedPlaceData: dropOffPredictionsPlacesList[index],
+                        isPickup: false,  // And false for drop-off locations
+                        controller: destinationTextEditingController,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 2),
+                  itemCount: dropOffPredictionsPlacesList.length,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                ),
+              ),
+
+          ],
+        ),
       ),
     );
   }
+
 }
