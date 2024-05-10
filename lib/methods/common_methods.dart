@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:users_app_uber/appInfo/app_info.dart';
 import 'package:users_app_uber/global/global_const.dart';
 import 'package:http/http.dart' as http;
-import 'package:users_app_uber/global/trip_var.dart';
 import 'package:users_app_uber/models/address_model.dart';
 
 import '../models/direction_details.dart';

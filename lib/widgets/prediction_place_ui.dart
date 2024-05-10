@@ -11,8 +11,11 @@ import 'package:users_app_uber/widgets/loading_dialog.dart';
 class PredictionPlaceUI extends StatefulWidget {
   PredictionModel? predictedPlaceData;
   late final bool isPickup;
+  late final bool isSavedLocation;
   late final TextEditingController controller;
-  PredictionPlaceUI({super.key, this.predictedPlaceData, this.isPickup = false, required this.controller});
+  late final VoidCallback onPlaceSelected;
+
+  PredictionPlaceUI({super.key, this.predictedPlaceData, this.isPickup = false, this.isSavedLocation = false, required this.controller, required this.onPlaceSelected});
 
   @override
   State<PredictionPlaceUI> createState() => _PredictionPlaceUIState();
@@ -49,11 +52,20 @@ class _PredictionPlaceUIState extends State<PredictionPlaceUI>
       if (widget.isPickup) {
         Provider.of<AppInfo>(context, listen: false).updatePickUpLocation(location);
         widget.controller.text = location.placeName ?? "";
+        widget.onPlaceSelected();
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Pickup location updated to ${location.placeName}"))
         );
-
-      } else {
+      }
+      else if (widget.isSavedLocation) {
+        Provider.of<AppInfo>(context, listen: false).updateSavedLocation(location);
+        widget.controller.text = location.placeName ?? "";
+        widget.onPlaceSelected();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Location updated to ${location.placeName}"))
+        );
+      }
+      else {
         Provider.of<AppInfo>(context, listen: false).updateDropOffLocation(location);
         Navigator.pop(context, "placeSelected");
       }
@@ -69,9 +81,6 @@ class _PredictionPlaceUIState extends State<PredictionPlaceUI>
       onPressed: ()
       {
         fetchClickedPlaceDetails(widget.predictedPlaceData!.place_id.toString());
-
-
-
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
