@@ -24,6 +24,9 @@ class _SearchDestinationPageState extends State<SearchDestinationPage> {
   List<PredictionModel> dropOffPredictionsPlacesList = [];
   List<PredictionModel> pickUpPredictionsPlacesList = [];
 
+  TextEditingController numberEditingController = TextEditingController();
+  TextEditingController guestNameEditingController = TextEditingController();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -129,6 +132,13 @@ class _SearchDestinationPageState extends State<SearchDestinationPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool moreInfoInputVisible =  false;
+    double mainCardHeight = 230;
+
+    if (isTongDai == "yes") {
+      moreInfoInputVisible = true;
+      mainCardHeight = 350;
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -137,7 +147,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage> {
             Card(
               elevation: 10,
               child: Container(
-                height: 230,
+                height: mainCardHeight,
                 decoration: const BoxDecoration(
                   color: Colors.black12,
                   boxShadow: [
@@ -229,6 +239,100 @@ class _SearchDestinationPageState extends State<SearchDestinationPage> {
                           ),
                         ],
                       ),
+
+                      Visibility(
+                        visible: moreInfoInputVisible,
+                        child: const SizedBox(height: 11,),),
+
+                      Visibility(
+                        visible: moreInfoInputVisible,
+                        child: Row(
+                          children: [
+
+                            const Icon(
+                              Icons.phone,
+                              color: Colors.grey,
+                            ),
+
+                            const SizedBox(width: 10,),
+
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: TextField(
+                                    controller: numberEditingController,
+                                    onChanged: (inputText)
+                                    {
+                                      userPhone = inputText;
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: "Guest's phone number",
+                                        fillColor: Colors.white12,
+                                        filled: true,
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.only(left: 11, top: 9, bottom: 9)
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+
+                      Visibility(
+                        visible: moreInfoInputVisible,
+                        child: const SizedBox(height: 11,),),
+
+                      Visibility(
+                        visible: moreInfoInputVisible,
+                        child: Row(
+                          children: [
+
+                            const Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                            ),
+
+                            const SizedBox(width: 10,),
+
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: TextField(
+                                    controller: guestNameEditingController,
+                                    onChanged: (inputText)
+                                    {
+                                      userName = inputText;
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: "Guest's name",
+                                        fillColor: Colors.white12,
+                                        filled: true,
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.only(left: 11, top: 9, bottom: 9)
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),)
+
                     ],
                   ),
                 ),
