@@ -28,6 +28,7 @@ import 'package:users_app_uber/pages/trips_history_page.dart';
 import 'package:users_app_uber/widgets/info_dialog.dart';
 
 import '../appInfo/app_info.dart';
+import '../models/address_model.dart';
 import '../widgets/loading_dialog.dart';
 
 class HomePage extends StatefulWidget {
@@ -338,13 +339,48 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  resetAppNow()
-  {
+  void resetAppNow() {
     setState(() {
+      // Clear existing map data
       polylineCoOrdinates.clear();
       polylineSet.clear();
       markerSet.clear();
       circleSet.clear();
+
+      // Check if the user's current position is available
+      if (currentPositionOfUser != null) {
+        // Ensure placeName is a string and currentPositionOfUser coordinates are set
+        String currentPlaceName = placeName ?? "Unknown Location";
+        double latitude = currentPositionOfUser!.latitude;
+        double longitude = currentPositionOfUser!.longitude;
+
+        // Update the global state with the pickup location
+        Provider.of<AppInfo>(context, listen: false).updatePickUpLocation(
+          AddressModel(
+            latitudePosition: latitude,
+            longitudePosition: longitude,
+            placeName: currentPlaceName,
+          ),
+        );
+
+        // Add the current location marker to the map
+        LatLng userCurrentLatLng = LatLng(latitude, longitude);
+        Marker currentLocationMarker = Marker(
+          markerId: const MarkerId("currentLocationMarkerID"),
+          position: userCurrentLatLng,
+          icon:
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          infoWindow:
+          InfoWindow(title: currentPlaceName, snippet: "Pickup Point"),
+        );
+
+        // Add this marker to the map set
+        markerSet.add(currentLocationMarker);
+      } else {
+        print("Error: currentPositionOfUser is null.");
+      }
+
+      // Reset UI container states and variables
       rideDetailsContainerHeight = 0;
       requestContainerHeight = 0;
       tripContainerHeight = 0;
@@ -352,13 +388,36 @@ class _HomePageState extends State<HomePage>
       bottomMapPadding = 300;
       isDrawerOpened = true;
 
+      // Reset driver and trip info
       status = "";
       nameDriver = "";
       photoDriver = "";
       phoneNumberDriver = "";
       carDetailsDriver = "";
       tripStatusDisplay = 'Driver is Arriving';
+      stateOfApp = "normal";
+
+      // Reset other location info
+      isLocationInfoVisible = false;
+      selectedLocationInfo = null;
+      selectedLocation = null;
+      selectedMarker = null;
     });
+
+    // Stop listening to trip updates if applicable
+    if (tripStreamSubscription != null) {
+      tripStreamSubscription!.cancel();
+      tripStreamSubscription = null;
+    }
+
+    // Clear trip request reference if applicable
+    if (tripRequestRef != null) {
+      tripRequestRef!.remove();
+      tripRequestRef = null;
+    }
+
+    // Re-initialize the driver markers on the map
+    initializeGeoFireListener();
   }
 
   cancelRideRequest()
@@ -722,7 +781,7 @@ class _HomePageState extends State<HomePage>
             tripStreamSubscription = null;
 
             resetAppNow();
-            Restart.restartApp();
+
           // }
         // }
       }
@@ -895,6 +954,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context)
   {
+    double screenWidth = MediaQuery.of(context).size.width;
     makeDriverNearbyCarIcon();
 
     return Scaffold(
@@ -1144,7 +1204,7 @@ class _HomePageState extends State<HomePage>
                 else
                 {
                   resetAppNow();
-                  Restart.restartApp();
+
                 }
               },
               child: Container(
@@ -1279,27 +1339,32 @@ class _HomePageState extends State<HomePage>
                         elevation: 10,
                         color: Colors.black45,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          // Adjust padding proportionally to the screen width
+                          padding: EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: screenWidth * 0.04  // Example: 4% of screen width
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 tripDirectionDetailsInfo_CAR != null ? "${tripDirectionDetailsInfo_CAR!.durationTextString} - ${tripDirectionDetailsInfo_CAR!.distanceTextString}" : "",
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.04,  // Responsive font size
                                   color: Colors.white70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(height: 10),  // Add some spacing
                               Image.asset(
                                 "assets/images/uberexec.png",
-                                height: 100,
-                                width: 100,
+                                height: screenWidth * 0.2,  // Image size as a fraction of screen width
+                                width: screenWidth * 0.2,
                               ),
                               Text(
                                 tripDirectionDetailsInfo_CAR != null ? "\$${(tripDirectionDetailsInfo_CAR!.calculateFareAmount()).toString()}" : "",
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.045,  // Slightly larger font size
                                   color: Colors.white70,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1307,7 +1372,7 @@ class _HomePageState extends State<HomePage>
                             ],
                           ),
                         ),
-                      ),
+                      )
                     ),
                     // Second Card with GestureDetector (Duplicate of the first for symmetry)
                     GestureDetector(
@@ -1325,27 +1390,32 @@ class _HomePageState extends State<HomePage>
                         elevation: 10,
                         color: Colors.black45,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          // Adjust padding based on screen size
+                          padding: EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: screenWidth * 0.04  // Example: 4% of screen width
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 tripDirectionDetailsInfo_BIKE != null ? "${tripDirectionDetailsInfo_BIKE!.durationTextString} - ${tripDirectionDetailsInfo_BIKE!.distanceTextString}" : "",
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.04,  // Responsive font size
                                   color: Colors.white70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(height: 10),  // Add some space
                               Image.asset(
                                 "assets/images/bike.png",
-                                height: 100,
-                                width: 100,
+                                height: screenWidth * 0.2,  // Image size as a fraction of screen width
+                                width: screenWidth * 0.2,
                               ),
                               Text(
                                 tripDirectionDetailsInfo_BIKE != null ? "\$${(tripDirectionDetailsInfo_BIKE!.calculateFareAmount()).toString()}" : "",
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.045,  // Slightly larger font size
                                   color: Colors.white70,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1353,7 +1423,7 @@ class _HomePageState extends State<HomePage>
                             ],
                           ),
                         ),
-                      ),
+                      )
                     ),
                   ],
                 ),
@@ -1413,7 +1483,7 @@ class _HomePageState extends State<HomePage>
                       {
                         resetAppNow();
                         cancelRideRequest();
-                        Restart.restartApp();
+
                       },
                       child: Container(
                         height: 50,
