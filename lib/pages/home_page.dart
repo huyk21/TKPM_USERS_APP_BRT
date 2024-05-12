@@ -664,7 +664,7 @@ class _HomePageState extends State<HomePage>
 
       "userName": userName,
       "userPhone": userPhone,
-      "userID": userID,
+      "userID": FirebaseAuth.instance.currentUser!.uid,
       "pickUpLatLng": pickUpCoOrdinatesMap,
       "dropOffLatLng": dropOffDestinationCoOrdinatesMap,
       "pickUpAddress": pickUpLocation.placeName,
